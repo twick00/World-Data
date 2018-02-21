@@ -7,16 +7,37 @@ namespace World_Data.Models
 {
     public class WorldData
     {
-        private static Dictionary<string,WorldData> WorldDict;
+        private static Dictionary<string,Country> CountryDict;
+        private static List<Country> CountryList = new List<Country>{};
+        private static List<City> CityList = new List<City>{};
+        private static List<Language> LangList = new List<Language>{};
 
-        public static List<Country> CountryList = new List<Country>{};
-        public static List<City> CityList = new List<City>{};
-        public static List<Language> LangList = new List<Language>{};
+        public static List<Country> GetCountryList()
+        {
+            return CountryList;
+        }
+        public static List<City> GetCityList()
+        {
+            return CityList;
+        }
+        public static List<Language> GetLangList()
+        {
+            return LangList;
+        }
+        public static Dictionary<string,Country> GetCountryDict()
+        {
+            return CountryDict;
+        }
 
         public Country thisCountry;
         public List<City> ThisCountryCity = new List<City>{};
         public List<Language> ThisCountryLanguage = new List<Language>{};
         //...GETTERS AND SETTERS WILL GO HERE...
+        public WorldData()
+        {
+            GetAll();
+        }
+
         public static void GetAll()
         {
             MySqlConnection conn = DB.Connection();
@@ -29,7 +50,6 @@ namespace World_Data.Models
             LangList.Clear();
             while(rdr.Read())
             {
-
                 string countryCode = rdr.GetString(0);
                 string countryName = rdr.GetString(1);
                 string countryRegion = rdr.GetString(3);

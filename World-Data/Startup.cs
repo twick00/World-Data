@@ -12,12 +12,13 @@ namespace World_Data
 {
         public static class DBConfiguration
         {
-        public static string ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=world;";
+        public static string ConnectionString = "server=localhost;user id=root;password=root;port=3306;database=world;";
+        //./C:\MAMP\bin\mysql\bin mysql --host=localhost -uroot -proot
         }
     public class Startup
     {
         public Startup(IHostingEnvironment env)
-        {
+        {   env.EnvironmentName = "Development";
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)

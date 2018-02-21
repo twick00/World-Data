@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace World_Data.Models
 {
@@ -21,6 +22,17 @@ public class Country //countryCode, countryName, countryRegion, double-surfaceAr
             public void SetLangList(List<Language> newLangList)
             {
                 ThisCountryLanguage = newLangList;
+            }
+            public Language GetPrimaryLanguage()
+            {
+                foreach(var lang in ThisCountryLanguage)
+                {   
+                    if (lang.BoolOfficialLanguage == true)
+                    {
+                        return lang;
+                    }
+                }      
+                return null;     
             }
 
             public Country(string countryCode = "", string countryName = "", string countryRegion = "", double surfaceArea = 0.00)
