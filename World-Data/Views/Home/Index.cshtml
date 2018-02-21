@@ -1,45 +1,31 @@
-﻿@{ ViewData["Title"] = "Home Page";
-        List<string> colorArr = new List<string> ["#F44336","#E91E63","#9C27B0","#673AB7","#3F51B5","#2196F3","#03A9F4","#00BCD4","#009688","#4CAF50","#8BC34A","#CDDC39","#FFEB3B","#FFC107","#FF9800","#FF5722"];
-            int index = 0;
-        }
+﻿@{ ViewData["Title"] = "Home Page";} @*"#F44336","#E91E63","#9C27B0","#673AB7","#3F51B5","#2196F3","#03A9F4","#00BCD4","#009688","#4CAF50","#8BC34A","#CDDC39","#FFEB3B","#FFC107","#FF9800","#FF5722"*@
+
 <div class="container">
     <div class="card-deck">
-        @foreach(var Country in Model) 
-        {   
-
-            @if(index <= 15)
-            { 
-                index = 0;
-            }
-            else 
-            {
-                index++;
-            }
-            <div class="col-xl-3 col-lg-4 col-md-6 pb-5">
-                <div class="card">
-                    <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
-                    <div class="card-block" style="@colorArr[index]">
-                        <h4 class="card-title text-center"><a href="/Country">@Country.CountryName</a></h4>
-                        <ul>
+        @foreach(var Country in Model) {
+        <div class="col-xl-3 col-lg-4 col-md-6 pb-5">
+            <div class="card h-100">
+                <img class="card-img-top" src="http://via.placeholder.com/350x150" alt="Card image cap">
+                <div class="card-block" style="">
+                    <h4 class="card-title text-center">
+                        <a href="@Country.CountryName">@Country.CountryName</a>
+                    </h4>
+                    <ul>
                         <li>Country Code: @Country.CountryCode</li>
                         <li>Region: @Country.CountryRegion</li>
                         <li>Surface Area: @Country.SurfaceArea</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <p>Primary Language: </p>
+                        <ul>
+                            @foreach(var lang in Country.ThisLangList) {<li> @lang.CountryLang </li>}
                         </ul>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted"><p>Primary Language: </p>
-                        @if (Country.GetPrimaryLanguage() == null)
-                        {
-                            <p>N/A</p>
-                        }
-                        else
-                        {
-                            <p>Country.GetPrimaryLanguage()</p>
-                        }
-                        </small>
-                    </div>
+                    </small>
                 </div>
             </div>
+        </div>
         }
     </div>
 </div>

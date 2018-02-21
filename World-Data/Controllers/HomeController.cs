@@ -16,11 +16,18 @@ namespace World_Data.Controllers
             return View("index", WorldData.GetCountryList());
         }
 
-        public IActionResult About()
+        [HttpGet("/newcountry")]
+        public IActionResult NewCountry()
         {
-            ViewData["Message"] = "Your application description page.";
+            return View("newcountry");
+        }
 
-            return View();
+        [HttpPost("/newcountry")]
+        public IActionResult PostNewCountry()
+        {
+            WorldData.BuildCountry(Request.Form["country-code"], Request.Form["country-name"], Request.Form["country-region"], Request.Form["country-local-name"]);
+            
+            return RedirectToAction("Index");
         }
 
         public IActionResult Contact()

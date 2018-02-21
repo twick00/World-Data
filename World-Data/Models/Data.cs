@@ -7,7 +7,7 @@ namespace World_Data.Models
 {
     public class WorldData
     {
-        private static Dictionary<string,Country> CountryDict;
+        //private static Dictionary<string,Country> CountryDict;
         private static List<Country> CountryList = new List<Country>{};
         private static List<City> CityList = new List<City>{};
         private static List<Language> LangList = new List<Language>{};
@@ -24,20 +24,35 @@ namespace World_Data.Models
         {
             return LangList;
         }
-        public static Dictionary<string,Country> GetCountryDict()
-        {
-            return CountryDict;
-        }
 
         public Country thisCountry;
         public List<City> ThisCountryCity = new List<City>{};
         public List<Language> ThisCountryLanguage = new List<Language>{};
         //...GETTERS AND SETTERS WILL GO HERE...
-        public WorldData()
+        public static void BuildCountry(string countryCode, string countryName, string countryRegion, string countryLocalName, string governmentForm = "N/A")
         {
-            GetAll();
+            Country newCountry = new Country(countryCode, countryName, countryRegion);
+            CountryList.Add(newCountry);
+            PushCountryToDB(newCountry);
         }
-
+        public static void PushCountryToDB(Country newCountry)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"INSERT INTO country (Code, Name) VALUES (@CountryCode, @CountryName);";
+            MySqlParameter code = new MySqlParameter("@CountryCode", newCountry.CountryCode);
+            MySqlParameter country = new MySqlParameter("@CountryName", newCountry.CountryName);
+            cmd.Parameters.Add(code);
+            cmd.Parameters.Add(country);
+            
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
         public static void GetAll()
         {
             MySqlConnection conn = DB.Connection();
@@ -89,15 +104,16 @@ namespace World_Data.Models
             if (conn != null)
             {
                 conn.Dispose();
-            }
         }
+        PopulateLists();
+            }
 
         public static void PopulateLists()
         {
             foreach(var country in CountryList)
             {
-                country.SetCityList(GetCities(country.CountryCode));
-                country.SetLangList(GetLanguages(country.CountryCode));
+                country.ThisCityList = GetCities(country.CountryCode);
+                country.ThisLangList = GetLanguages(country.CountryCode);
             }
         }
         public static List<City> GetCities(string code)
