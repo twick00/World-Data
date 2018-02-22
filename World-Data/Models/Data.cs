@@ -7,7 +7,8 @@ namespace World_Data.Models
 {
     public class WorldData
     {
-        //private static Dictionary<string,Country> CountryDict;
+        private static int color = 0;
+        private static List<string> colArr = new List<string>{"#F44336","#E91E63","#9C27B0","#673AB7","#3F51B5","#2196F3","#03A9F4","#00BCD4","#009688","#4CAF50","#8BC34A","#CDDC39","#FFEB3B","#FFC107","#FF9800","#FF5722"};
         private static List<Country> CountryList = new List<Country>{};
         private static List<City> CityList = new List<City>{};
         private static List<Language> LangList = new List<Language>{};
@@ -24,7 +25,6 @@ namespace World_Data.Models
         {
             return LangList;
         }
-
         public Country thisCountry;
         public List<City> ThisCountryCity = new List<City>{};
         public List<Language> ThisCountryLanguage = new List<Language>{};
@@ -53,6 +53,28 @@ namespace World_Data.Models
                 conn.Dispose();
             }
         }
+        public static void DeleteCountry(string countryName)
+        {
+            foreach(var country in CountryList)
+            {
+                if(country.CountryName == countryName)
+                {
+                    string temp = country.CountryCode;
+                    MySqlConnection conn = DB.Connection();
+                    conn.Open();
+                    var cmd = conn.CreateCommand() as MySqlCommand;
+                    cmd.CommandText = @"DELETE FROM country WHERE Code = @CountryCode;";
+                    MySqlParameter countryCode = new MySqlParameter("@CountryCode", country.CountryCode);
+                    cmd.Parameters.Add(countryCode);
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    if (conn != null)
+                    {
+                        conn.Dispose();
+                    }
+                }
+            }
+        }
         public static void GetAll()
         {
             MySqlConnection conn = DB.Connection();
@@ -71,7 +93,6 @@ namespace World_Data.Models
                 double surfaceArea = System.Convert.ToDouble(rdr.GetFloat(4));
 
                 Country newCountry = new Country(countryCode, countryName, countryRegion, surfaceArea);
-
                 CountryList.Add(newCountry);
             }
             conn.Close();

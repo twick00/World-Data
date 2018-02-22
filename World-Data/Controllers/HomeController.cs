@@ -15,6 +15,13 @@ namespace World_Data.Controllers
             WorldData.GetAll();
             return View("index", WorldData.GetCountryList());
         }
+        [HttpPost("/delete/{country}")]
+        public IActionResult Delete(string country)
+        {
+            WorldData.DeleteCountry(country);
+            WorldData.GetAll();
+            return RedirectToAction("Index");
+        }
 
         [HttpGet("/newcountry")]
         public IActionResult NewCountry()
